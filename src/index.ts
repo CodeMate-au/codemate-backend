@@ -1,0 +1,46 @@
+// import { PrismaClient } from "@prisma/client";
+// import express from "express";
+
+// const prisma = new PrismaClient();
+// const app = express();
+
+// app.use(express.json());
+
+// app.get("/users", async (req, res) => {
+//   const users = await prisma.user.findMany();
+//   res.json(users);
+// });
+
+// app.post("/register", async (req, res) => {
+//   const result = await prisma.user.create({
+//     data: {
+//       ...req.body,
+//     },
+//   });
+//   res.json(result);
+// });
+
+// app.get("/login", async (req, res) => {});
+// app.listen(3000, () =>
+//   console.log("REST API server ready at: http://localhost:3000")
+// );
+import express from "express";
+
+import problemRouter from "./routes/problem.route";
+import authRouter from "./routes/auth.route";
+export const app = express();
+app.use(express.json());
+app.use("/api/problems", problemRouter);
+app.use("/api/auth", authRouter);
+
+app.get("/auth", (req, res) => {
+  // Store parameters in an object
+  const params = {
+    scope: "read:user",
+    client_id: process.env.GITHUB_OAUTH_CLIENT_ID as string,
+  };
+
+  // Convert parameters to a URL-encoded string
+  const urlEncodedParams = new URLSearchParams(params).toString();
+  res.redirect(`https://github.com/login/oauth/authorize?${urlEncodedParams}`);
+});
