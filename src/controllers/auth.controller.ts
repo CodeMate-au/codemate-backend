@@ -1,13 +1,23 @@
 import { Request, Response } from "express";
 import { getGithubUser, getGithubOathToken } from "../services/github.service";
-import { PrismaClient } from "@prisma/client";
+import prisma from "../prisma";
 import { createToken } from "../services/jwt.service";
 
-const prisma = new PrismaClient();
-const login = async (req: Request, res: Response) => {
+const githubLoginHandler = async (req: Request, res: Response) => {
+  const params = {
+    scope: "read:user",
+    client_id: process.env.GITHUB_OAUTH_CLIENT_ID as string,
+  };
+
+  // Convert parameters to a URL-encoded string
+  const urlEncodedParams = new URLSearchParams(params).toString();
+  res.redirect(`https://github.com/login/oauth/authorize?${urlEncodedParams}`);
+};
+
+const githubRedirectHandler = async (req: Request, res: Response) => {
   try {
     const { code } = req.query as { code: string };
-    // console.log("code here:", code);
+    // console.log("github code:", code);
 
     // Check if the code is present
     if (!code || typeof code !== "string") {
@@ -42,11 +52,17 @@ const login = async (req: Request, res: Response) => {
     }
 
     const token = createToken(user.id);
-    res.status(200).json({
-      MessageChannel: "Login Successful",
-      token,
-      user,
+    // res.status(200).json({
+    //   MessageChannel: "Login Successful",
+    //   token,
+    //   user,
+    // });
+    console.log("session token", token);
+    res.cookie("token", token, {
+      httpOnly: true,
     });
+
+    res.redirect(`http://localhost:3000/dashboard`);
   } catch (err) {
     if (err instanceof Error) {
       console.log(err.message);
@@ -58,4 +74,4 @@ const login = async (req: Request, res: Response) => {
   }
 };
 
-export default { login };
+export default { githubRedirectHandler, githubLoginHandler };

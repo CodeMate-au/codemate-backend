@@ -25,22 +25,23 @@
 //   console.log("REST API server ready at: http://localhost:3000")
 // );
 import express from "express";
+import cors from "cors";
+export const app = express();
+
+import cookieParser from "cookie-parser";
+const corsOptions = {
+  origin: "http://localhost:3000", // or the specific origin you want to allow
+  credentials: true, // to allow cookies to be sent
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
+app.use(cookieParser());
 
 import problemRouter from "./routes/problem.route";
 import authRouter from "./routes/auth.route";
-export const app = express();
+import userRouter from "./routes/user.route";
 app.use(express.json());
 app.use("/api/problems", problemRouter);
 app.use("/api/auth", authRouter);
-
-app.get("/auth", (req, res) => {
-  // Store parameters in an object
-  const params = {
-    scope: "read:user",
-    client_id: process.env.GITHUB_OAUTH_CLIENT_ID as string,
-  };
-
-  // Convert parameters to a URL-encoded string
-  const urlEncodedParams = new URLSearchParams(params).toString();
-  res.redirect(`https://github.com/login/oauth/authorize?${urlEncodedParams}`);
-});
+app.use("/api/user", userRouter);

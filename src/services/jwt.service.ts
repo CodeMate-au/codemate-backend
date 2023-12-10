@@ -10,7 +10,8 @@ export const verifyToken = (token: string) => {
   return jwt.verify(token, JWT_SECRET!) as TokenPayload;
 };
 export const createToken = (userId: number) => {
-  console.log(JWT_SECRET);
+  console.log("jwt_secret", JWT_SECRET);
+
   return jwt.sign({ userId }, JWT_SECRET!, {
     expiresIn: "1hr",
   });
