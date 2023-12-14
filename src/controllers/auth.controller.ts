@@ -32,19 +32,19 @@ const githubRedirectHandler = async (req: Request, res: Response) => {
       access_token: githubaccessToken.access_token,
     });
 
-    // console.log("githubUser:", githubUser);
+    console.log("githubUser:", githubUser);
 
     let user = await prisma.user.findUnique({
       where: {
-        email: githubUser.email,
+        githubId: githubUser.login,
       },
     });
 
     if (!user) {
       user = await prisma.user.create({
         data: {
-          email: githubUser.email,
-          name: githubUser.name,
+          email: githubUser.email || undefined,
+          name: githubUser.name || undefined,
           githubId: githubUser.login,
           avatar: githubUser.avatar_url,
         },
@@ -58,11 +58,11 @@ const githubRedirectHandler = async (req: Request, res: Response) => {
     //   user,
     // });
     console.log("session token", token);
-    res.cookie("token", token, {
+    res.cookie("session-token", token, {
       httpOnly: true,
     });
 
-    res.redirect(`http://localhost:3000/dashboard`);
+    res.redirect(`${process.env.FRONTEND_URL}/dashboard`);
   } catch (err) {
     if (err instanceof Error) {
       console.log(err.message);

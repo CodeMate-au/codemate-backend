@@ -5,16 +5,19 @@ import { verifyToken } from "../services/jwt.service";
 const getUserHandler = async (req: Request, res: Response) => {
   try {
     // const token = req.headers.authorization?.split(" ")[1]; // Assuming the token is sent as a Bearer token
-    // console.log(req.cookies);
-    const token = req.cookies?.token; // Assuming token is stored in a cookie named 'token'
+    // console.log("cookies here", req.cookies);
+    const token = req.cookies?.["session-token"]; // Assuming token is stored in a cookie named 'token'
     if (!token) {
       return res.status(401).json({ message: "No token provided" });
     }
 
     // Verify the token
     const decoded = verifyToken(token); // Replace JWT_SECRET with your secret key
+    // console.log("decoded here", decoded);
+    if (decoded instanceof Error) {
+      return res.status(401).json({ decoded });
+    }
 
-    // Extract userId from the token
     const userId = decoded.userId; // Ensure your token payload has the 'id' field
 
     // Find the user in the database
