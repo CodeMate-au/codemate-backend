@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import prisma from "../prisma";
 import { verifyToken } from "../services/jwt.service";
+import { TokenExpiredError } from "jsonwebtoken";
 
 const getUserHandler = async (req: Request, res: Response) => {
   try {
@@ -15,6 +16,7 @@ const getUserHandler = async (req: Request, res: Response) => {
     const decoded = verifyToken(token); // Replace JWT_SECRET with your secret key
     // console.log("decoded here", decoded);
     if (decoded instanceof Error) {
+      console.log("here", decoded);
       return res.status(401).json({ decoded });
     }
 
@@ -33,7 +35,12 @@ const getUserHandler = async (req: Request, res: Response) => {
 
     res.status(200).json(user);
   } catch (error) {
-    console.log(error);
+    console.log("user error handler", error);
+
+    if (error instanceof TokenExpiredError) {
+      return res.status(401).json({ message: "Token expired" });
+    }
+
     return res.status(500).json({ message: "Internal server error" });
   }
 };
