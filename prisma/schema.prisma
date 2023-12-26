@@ -13,4 +13,11 @@ model User {
   name     String?
   githubId String  @unique
   avatar   String?
+  rooms    Room[]
+}
+
+model Room {
+  id      Int    @id @default(autoincrement())
+  name    String
+  members User[]
 }

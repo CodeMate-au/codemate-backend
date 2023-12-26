@@ -45,3 +45,4 @@ app.use(express.json());
 app.use("/api/problems", problemRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
+app.use("/api/room", userRouter);
