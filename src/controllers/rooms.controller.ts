@@ -7,7 +7,7 @@ const getRoomsHandler = async (req: Request, res: Response) => {
       include: {
         members: {
           where: {
-            id: req.body.userId,
+            id: Number(req.body.userId),
           },
         },
       },
@@ -56,9 +56,12 @@ const createRoomHandler = async (req: Request, res: Response) => {
         name: req.body.name,
         members: {
           connect: {
-            id: req.body.userId,
+            id: Number(req.body.userId),
           },
         },
+      },
+      include: {
+        members: true,
       },
     });
 
@@ -74,12 +77,12 @@ const updateRoomMembersHandler = async (req: Request, res: Response) => {
   try {
     const room = await prisma.room.update({
       where: {
-        id: req.body.roomId,
+        id: Number(req.body.roomId),
       },
       data: {
         members: {
           connect: {
-            id: req.body.userId,
+            id: Number(req.body.userId),
           },
         },
       },

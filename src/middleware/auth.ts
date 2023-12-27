@@ -15,7 +15,7 @@ const isAuthorized = (req: Request, res: Response, next: NextFunction) => {
       return res.status(401).json({ decoded });
     }
     const userId = decoded.userId;
-    if (req.body.userId && req.body.userId !== userId) {
+    if (req.body.userId && Number(req.body.userId) !== userId) {
       throw "Invalid user ID";
     } else {
       next();

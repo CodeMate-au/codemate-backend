@@ -26,6 +26,8 @@
 // );
 import express from "express";
 import cors from "cors";
+import formData from "express-form-data";
+
 export const app = express();
 
 import cookieParser from "cookie-parser";
@@ -37,12 +39,15 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(cookieParser());
+app.use(formData.parse());
 
 import problemRouter from "./routes/problem.route";
 import authRouter from "./routes/auth.route";
 import userRouter from "./routes/user.route";
+import roomRouter from "./routes/room.route";
+
 app.use(express.json());
 app.use("/api/problems", problemRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
-app.use("/api/room", userRouter);
+app.use("/api/room", roomRouter);
