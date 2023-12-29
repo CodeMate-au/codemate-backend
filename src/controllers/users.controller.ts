@@ -1,17 +1,19 @@
-import { Request, Response } from "express";
+import { Request, Response, response } from "express";
 import prisma from "../prisma";
 import { verifyToken } from "../services/jwt.service";
 import { TokenExpiredError } from "jsonwebtoken";
-
+import { getUserFromCookies } from "../middleware/userFromCookies";
 const getUserHandler = async (req: Request, res: Response) => {
   try {
     // const token = req.headers.authorization?.split(" ")[1]; // Assuming the token is sent as a Bearer token
     // console.log("cookies here", req.cookies);
+
+    // const userId = getUserFromCookies(req, res);
+
     const token = req.cookies?.["session-token"]; // Assuming token is stored in a cookie named 'token'
     if (!token) {
       return res.status(401).json({ message: "No token provided" });
     }
-
     // Verify the token
     const decoded = verifyToken(token); // Replace JWT_SECRET with your secret key
     // console.log("decoded here", decoded);
@@ -19,13 +21,15 @@ const getUserHandler = async (req: Request, res: Response) => {
       console.log("here", decoded);
       return res.status(401).json({ decoded });
     }
+    const userId = decoded.userId;
 
-    const userId = decoded.userId; // Ensure your token payload has the 'id' field
+    // if (userId instanceof response) {
+    //   return userId;
+    // }
 
-    // Find the user in the database
     const user = await prisma.user.findUnique({
       where: {
-        id: userId,
+        id: userId as number,
       },
     });
 

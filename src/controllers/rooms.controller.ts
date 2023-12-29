@@ -1,13 +1,27 @@
 import { Request, Response } from "express";
 import prisma from "../prisma";
+import { verifyToken } from "../services/jwt.service";
 
 const getRoomsHandler = async (req: Request, res: Response) => {
   try {
+    const token = req.cookies?.["session-token"]; // Assuming token is stored in a cookie named 'token'
+    if (!token) {
+      return res.status(401).json({ message: "No token provided" });
+    }
+    // Verify the token
+    const decoded = verifyToken(token); // Replace JWT_SECRET with your secret key
+    // console.log("decoded here", decoded);
+    if (decoded instanceof Error) {
+      console.log("here", decoded);
+      return res.status(401).json({ decoded });
+    }
+    const userId = decoded.userId;
+
     const rooms = await prisma.room.findMany({
       include: {
         members: {
           where: {
-            id: Number(req.body.userId),
+            id: userId,
           },
         },
       },
@@ -51,6 +65,7 @@ const getRoomHandler = async (req: Request, res: Response) => {
 
 const createRoomHandler = async (req: Request, res: Response) => {
   try {
+    console.log("req.body", req.body);
     const room = await prisma.room.create({
       data: {
         name: req.body.name,
