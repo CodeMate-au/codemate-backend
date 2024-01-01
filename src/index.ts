@@ -45,9 +45,11 @@ import problemRouter from "./routes/problem.route";
 import authRouter from "./routes/auth.route";
 import userRouter from "./routes/user.route";
 import roomRouter from "./routes/room.route";
+import memberRouter from "./routes/member.route";
 
 app.use(express.json());
 app.use("/api/problems", problemRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/room", roomRouter);
+app.use("/api/members", memberRouter);

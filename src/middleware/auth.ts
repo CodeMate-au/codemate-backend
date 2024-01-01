@@ -3,7 +3,7 @@ import { verifyToken } from "../services/jwt.service";
 
 const isAuthorized = (req: Request, res: Response, next: NextFunction) => {
   try {
-    const token = req.cookies?.["session-token"]; // Assuming token is stored in a cookie named 'token'
+    const token = req.cookies?.["session-token"]; // Assuming token is stored in a cookie named 'session-token'
     if (!token) {
       return res.status(401).json({ message: "No token provided" });
     }
@@ -23,7 +23,7 @@ const isAuthorized = (req: Request, res: Response, next: NextFunction) => {
     }
   } catch (error) {
     console.log("error handler", error);
-    return res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: "Authorization error" });
   }
 };
 

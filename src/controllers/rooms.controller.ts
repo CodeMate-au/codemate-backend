@@ -42,6 +42,7 @@ const getRoomsHandler = async (req: Request, res: Response) => {
 const getRoomHandler = async (req: Request, res: Response) => {
   try {
     const roomId = Number(req.params.room_id);
+    console.log("roomId", roomId);
     const room = await prisma.room.findUnique({
       where: {
         id: roomId,
@@ -90,15 +91,19 @@ const createRoomHandler = async (req: Request, res: Response) => {
 
 const updateRoomMembersHandler = async (req: Request, res: Response) => {
   try {
+    console.log("updateRoomMembersHandler", req.params, req.body);
+    console.log("req.body", req.body.user_id);
     const room = await prisma.room.update({
       where: {
-        id: Number(req.body.roomId),
+        id: Number(req.params.room_id),
       },
       data: {
         members: {
-          connect: {
-            id: Number(req.body.userId),
-          },
+          connect: [
+            {
+              id: Number(req.body.user_id),
+            },
+          ],
         },
       },
     });
@@ -106,12 +111,12 @@ const updateRoomMembersHandler = async (req: Request, res: Response) => {
     res.status(200).json(room);
   } catch (error) {
     console.log("room error handler", error);
-
     return res.status(500).json({ message: "Internal server error" });
   }
 };
 
 const deleteRoomHandler = async (req: Request, res: Response) => {
+  console.log("req.params", req.params);
   try {
     const roomId = Number(req.params.room_id);
     const disconnectRoom = await prisma.room.update({
