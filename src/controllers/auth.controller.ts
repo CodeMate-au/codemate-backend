@@ -32,7 +32,7 @@ const githubRedirectHandler = async (req: Request, res: Response) => {
       access_token: githubaccessToken.access_token,
     });
 
-    console.log("githubUser:", githubUser);
+    // console.log("githubUser:", githubUser);
 
     let user = await prisma.user.findUnique({
       where: {
@@ -57,7 +57,7 @@ const githubRedirectHandler = async (req: Request, res: Response) => {
     //   token,
     //   user,
     // });
-    console.log("session token", token);
+    // console.log("session token", token);
     res.cookie("session-token", token, {
       httpOnly: true,
     });

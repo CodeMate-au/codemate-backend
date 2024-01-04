@@ -11,7 +11,7 @@ const isAuthorized = (req: Request, res: Response, next: NextFunction) => {
     const decoded = verifyToken(token); // Replace JWT_SECRET with your secret key
     // console.log("decoded here", decoded);
     if (decoded instanceof Error) {
-      console.log("here", decoded);
+      // console.log("here", decoded);
       return res.status(401).json({ decoded });
     }
     const userId = decoded.userId;

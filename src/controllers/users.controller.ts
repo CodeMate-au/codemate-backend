@@ -18,7 +18,7 @@ const getUserHandler = async (req: Request, res: Response) => {
     const decoded = verifyToken(token); // Replace JWT_SECRET with your secret key
     // console.log("decoded here", decoded);
     if (decoded instanceof Error) {
-      console.log("here", decoded);
+      // console.log("here", decoded);
       return res.status(401).json({ decoded });
     }
     const userId = decoded.userId;
@@ -39,7 +39,7 @@ const getUserHandler = async (req: Request, res: Response) => {
 
     res.status(200).json(user);
   } catch (error) {
-    console.log("user error handler", error);
+    // console.log("user error handler", error);
 
     if (error instanceof TokenExpiredError) {
       return res.status(401).json({ message: "Token expired" });

@@ -12,7 +12,7 @@ const getRoomsHandler = async (req: Request, res: Response) => {
     const decoded = verifyToken(token); // Replace JWT_SECRET with your secret key
     // console.log("decoded here", decoded);
     if (decoded instanceof Error) {
-      console.log("here", decoded);
+      // console.log("here", decoded);
       return res.status(401).json({ decoded });
     }
     const userId = decoded.userId;
@@ -42,7 +42,7 @@ const getRoomsHandler = async (req: Request, res: Response) => {
 const getRoomHandler = async (req: Request, res: Response) => {
   try {
     const roomId = Number(req.params.room_id);
-    console.log("roomId", roomId);
+    // console.log("roomId", roomId);
     const room = await prisma.room.findUnique({
       where: {
         id: roomId,
@@ -66,7 +66,7 @@ const getRoomHandler = async (req: Request, res: Response) => {
 
 const createRoomHandler = async (req: Request, res: Response) => {
   try {
-    console.log("req.body", req.body);
+    // console.log("req.body", req.body);
     const room = await prisma.room.create({
       data: {
         name: req.body.name,
@@ -91,8 +91,8 @@ const createRoomHandler = async (req: Request, res: Response) => {
 
 const updateRoomMembersHandler = async (req: Request, res: Response) => {
   try {
-    console.log("updateRoomMembersHandler", req.params, req.body);
-    console.log("req.body", req.body.user_id);
+    // console.log("updateRoomMembersHandler", req.params, req.body);
+    // console.log("req.body", req.body.user_id);
     const room = await prisma.room.update({
       where: {
         id: Number(req.params.room_id),
@@ -116,7 +116,7 @@ const updateRoomMembersHandler = async (req: Request, res: Response) => {
 };
 
 const deleteRoomHandler = async (req: Request, res: Response) => {
-  console.log("req.params", req.params);
+  // console.log("req.params", req.params);
   try {
     const roomId = Number(req.params.room_id);
     const disconnectRoom = await prisma.room.update({

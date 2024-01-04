@@ -11,7 +11,7 @@ export const getUserFromCookies = (req: Request, res: Response) => {
   const decoded = verifyToken(token); // Replace JWT_SECRET with your secret key
   // console.log("decoded here", decoded);
   if (decoded instanceof Error) {
-    console.log("token error here", decoded);
+    // console.log("token error here", decoded);
     return res.status(401).json({ decoded });
   }
 
