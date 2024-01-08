@@ -34,22 +34,23 @@ const githubRedirectHandler = async (req: Request, res: Response) => {
 
     // console.log("githubUser:", githubUser);
 
-    let user = await prisma.user.findUnique({
+    let user = await prisma.user.upsert({
       where: {
         githubId: githubUser.login,
       },
+      update: {
+        email: githubUser.email || undefined,
+        name: githubUser.name || undefined,
+        githubId: githubUser.login,
+        avatar: githubUser.avatar_url,
+      },
+      create: {
+        email: githubUser.email || undefined,
+        name: githubUser.name || undefined,
+        githubId: githubUser.login,
+        avatar: githubUser.avatar_url,
+      },
     });
-
-    if (!user) {
-      user = await prisma.user.create({
-        data: {
-          email: githubUser.email || undefined,
-          name: githubUser.name || undefined,
-          githubId: githubUser.login,
-          avatar: githubUser.avatar_url,
-        },
-      });
-    }
 
     const token = createToken(user.id);
     // res.status(200).json({
