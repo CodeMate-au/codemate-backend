@@ -50,4 +50,4 @@ COPY --from=build /app/node_modules/.prisma ./node_modules/.prisma
 EXPOSE 8888
 
 # Start the application
-CMD [ "node", "build/server.js" ]
+CMD [ "node", "build/server.js"]
