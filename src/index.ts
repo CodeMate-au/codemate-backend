@@ -53,3 +53,6 @@ app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/room", roomRouter);
 app.use("/api/members", memberRouter);
+app.use("/healthcheck", (req, res) => {
+  res.status(200).send("OK");
+});
